@@ -1,24 +1,51 @@
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Switch,
+} from 'react-router-dom';
+import ChordPage from './pages/ChordPage';
+import PageNotFound from './pages/PageNotFound';
+import Home from './pages/Home';
+import ChordData from './data.json';
 import './App.css';
+import Search from './components/Search';
+
+const { notes } = ChordData;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <nav>
+        <NavLink id="title" to="/">
+          Chord Charts
+        </NavLink>
+        <Search />
+        <span>
+          {notes.map((item, index) =>
+            item.name.length === 1 ? (
+              <NavLink
+                key={index}
+                activeClassName="selected"
+                exact
+                to={`/chord/${item.path}`}
+              >
+                {item.name}
+              </NavLink>
+            ) : (
+              ''
+            )
+          )}
+        </span>
+      </nav>
+      <main>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/chord/:chord" component={ChordPage} />
+          <Route render={PageNotFound} />
+        </Switch>
+      </main>
+    </Router>
   );
 }
 
